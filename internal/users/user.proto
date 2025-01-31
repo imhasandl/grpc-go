@@ -1,0 +1,35 @@
+syntax = "3";
+
+package user;
+
+service UserService {
+   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+   rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+
+message CreateUserRequest {
+   string email = 1;
+   string username = 2;
+   string password = 3;
+}
+
+message CreateUserResponse {
+   User user = 1;
+}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message GetUserResponse {
+   User user = 1;
+}
+
+message User {
+   string id = 1;
+   google.protobuf.Timestamp created_at = 2;
+   google.protobuf.Timestamp updated_at = 3;
+   string email = 4;
+   string password = 5;
+   string username = 6;
+}
