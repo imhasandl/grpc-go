@@ -1,6 +1,9 @@
-syntax = "3";
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
 
 package user;
+
+option go_package = "github.com/imhasandl/grpc-go/internal/users";
 
 service UserService {
    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
