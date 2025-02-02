@@ -1,3 +1,3 @@
-module github.com/imhasandl/grpc-go
+module github.com/imhasandl/grpc-go/protos
 
 go 1.23.5
