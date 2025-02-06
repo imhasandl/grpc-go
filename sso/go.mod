@@ -2,14 +2,16 @@ module github.com/imhasandl/grpc-go/sso
 
 go 1.23.5
 
-require github.com/imhasandl/grpc-go/protos v0.0.0-20250202153411-b1e453fe0603
+require (
+	github.com/imhasandl/grpc-go/protos v0.0.0-20250202153411-b1e453fe0603
+	github.com/mattn/go-sqlite3 v1.14.24
+)
 
 require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-sqlite3 v1.14.24 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 )
 

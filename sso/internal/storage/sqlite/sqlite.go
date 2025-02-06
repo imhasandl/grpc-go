@@ -65,3 +65,22 @@ func (s *Storage) User(ctx context.Context, email string) (models.User, error) {
 
 	return user, nil
 }
+
+func (s *Storage) IsAdmin(ctx context.Context, userID int64) (bool, error) {
+	const op = "storage.sqlite.IsAdmin"
+
+	dbReq, err := s.db.Prepare("SELECT is_admin FROM users WHERE id = ?")
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", op, err)
+	}
+
+	row := dbReq.QueryRowContext(ctx, userID)
+
+	var res bool
+	err = row.Scan(&res)
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return res, nil
+}
