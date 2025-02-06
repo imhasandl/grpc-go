@@ -15,10 +15,10 @@ type App struct {
 	port int
 }
 
-func New(log *slog.Logger, port int) *App {
+func New(log *slog.Logger, authService auth.Auth, port int) *App {
 	gRPCServer := grpc.NewServer()
 
-	auth.Register(gRPCServer)
+	auth.Register(gRPCServer, authService)
 
 	return &App{
 		log:  log,
