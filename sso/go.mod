@@ -9,6 +9,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-sqlite3 v1.14.24 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 )
 
@@ -16,7 +17,6 @@ require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/fatih/color v1.18.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/golang-migrate/migrate/v4 v4.18.2
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/joho/godotenv v1.5.1
