@@ -1,4 +1,4 @@
-package migrator
+package main	
 
 import (
 	"errors"
@@ -6,14 +6,17 @@ import (
 	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
 	var storagePath, migrationsPath, migrationsTable string
-
-	flag.StringVar(&storagePath, "storage", "path to storage", "path to storage")
-	flag.StringVar(&migrationsPath, "migrations", "path to migrations", "path of migrations")
-	flag.StringVar(&migrationsTable, "table", "migrations", "name of migrations table")
+	
+	flag.StringVar(&storagePath, "storage-path", "", "path to storage")
+	flag.StringVar(&migrationsPath, "migrations-path", "", "path to migrations")
+	flag.StringVar(&migrationsTable, "migrations-table", "migrations", "name of migrations table")
+	flag.Parse()
 
 	if storagePath == "" || migrationsPath == "" {
 		panic("fill the storage path")
