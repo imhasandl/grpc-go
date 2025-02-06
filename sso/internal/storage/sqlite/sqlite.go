@@ -76,11 +76,31 @@ func (s *Storage) IsAdmin(ctx context.Context, userID int64) (bool, error) {
 
 	row := dbReq.QueryRowContext(ctx, userID)
 
-	var res bool
-	err = row.Scan(&res)
+	var isAdmin bool
+	err = row.Scan(&isAdmin)
 	if err != nil {
 		return false, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return res, nil
+	return isAdmin, nil
+}
+
+func (s *Storage) App(ctx context.Context, appID int) (models.App, error) {
+	const op = "storate.sqlite.App"
+
+	dbReq, err := s.db.Prepare("SELECT id, name, secret FROM apps")
+	if err != nil {
+		return models.App{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	row := dbReq.QueryRowContext(ctx, appID)
+
+	var app models.App
+
+	err = row.Scan(&app.ID, &app.Name, &app.Secret)
+	if err != nil {
+		return models.App{}, fmt.Errorf("%s: %w", op, err)
+	} 
+
+	return app, nil
 }

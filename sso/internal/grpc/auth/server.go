@@ -11,8 +11,8 @@ import (
 
 type Auth interface {
 	Login(ctx context.Context, email, password string, appID int) (token string, err error)
-	RegisterNewUser(ctx context.Context, email, password string) (userID int, err error)
-	IsAdmin(ctx context.Context, userID int) (bool, error)
+	RegisterNewUser(ctx context.Context, email, password string) (userID int64, err error)
+	IsAdmin(ctx context.Context, userID int64) (bool, error)
 }
 
 type serverAPI struct {
@@ -60,7 +60,7 @@ func (s *serverAPI) IsAdmin(ctx context.Context, req *sso.IsAdminRequest) (*sso.
 		return nil, err
 	}
 
-	isAdmin, err := s.auth.IsAdmin(ctx, int(req.GetUserId()))
+	isAdmin, err := s.auth.IsAdmin(ctx, req.GetUserId())
 	if err != nil {
 		return nil, err
 	}

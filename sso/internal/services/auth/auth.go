@@ -14,6 +14,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//go:generate mockgen -source=auth.go -destination=mocks/auth_mock.go -package=mocks
+
+// Auth is an interface for authentication service.
+// It provides methods for user login, registration, and admin check.
+// It uses UserSaver, UserProvider, and AppProvider interfaces for data access.
 type Auth struct {
 	log *slog.Logger
 	usrSaver UserSaver
@@ -22,18 +27,23 @@ type Auth struct {
 	tokenTTL time.Duration
 } 
 
+// UserSaver interface defines methods for saving user data.
 type UserSaver interface {
 	SaveUser(ctx context.Context, email string, passHash []byte) (int64, error)
 }
 
+// UserProvider interface defines methods for retrieving user data.
 type UserProvider interface {
 	User(ctx context.Context, email string) (models.User, error)
-	isAdmin(ctx context.Context, userID int64) (bool, error)
+	IsAdmin(ctx context.Context, userID int64) (bool, error)
 }
 
+// AppProvider interface defines methods for retrieving application data.
 type AppProvider interface {
 	App(ctx context.Context, appID int) (models.App, error)
 }
+
+// New creates a new Auth service instance.
 
 func New(
 	log *slog.Logger, 
@@ -51,6 +61,8 @@ func New(
 		}
 }
 
+// Login logs in a user given their email, password, and appID.
+// It returns a JWT token upon successful login.
 func (a *Auth) Login(ctx context.Context, email, password string, appID int) (string, error) {
 	const op = "auth.Login"
 
@@ -97,6 +109,8 @@ func (a *Auth) Login(ctx context.Context, email, password string, appID int) (st
 	return token, nil
 }
 
+// RegisterNewUser registers a new user given their email and password.
+// It returns the user ID upon successful registration.
 func (a *Auth) RegisterNewUser(ctx context.Context, email, password string) (int64, error) {
 	const op = "auth.RegisterNewUser"
 
@@ -129,6 +143,8 @@ func (a *Auth) RegisterNewUser(ctx context.Context, email, password string) (int
 	return userID, nil
 }
 
+// IsAdmin checks if a user with the given ID is an admin.
+// It returns a boolean indicating whether the user is an admin and an error.
 func (a *Auth) IsAdmin(ctx context.Context, userID int64) (bool, error) {
 	const op = "auth.IsAdmin"
 
@@ -138,7 +154,7 @@ func (a *Auth) IsAdmin(ctx context.Context, userID int64) (bool, error) {
 
 	log.Info("is admin info")
 
-	isAdmin, err := a.usrProvider.isAdmin(ctx, userID)
+	isAdmin, err := a.usrProvider.IsAdmin(ctx, userID)
 	if err != nil {
 		if errors.Is(err, storage.ErrUserExists) {
 			log.Warn("can't find is user admin", sl.Err(err))
