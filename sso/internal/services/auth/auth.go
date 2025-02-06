@@ -116,8 +116,13 @@ func (a *Auth) RegisterNewUser(ctx context.Context, email, password string) (int
 
 	userID, err := a.usrSaver.SaveUser(ctx, email, hashedPassword)
 	if err != nil {
-		log.Error("failed to save user", sl.Err(err))
+		if errors.Is(err, storage.ErrUserExists) {
+			log.Warn("user already exists", sl.Err(err))
+			
+			return 0, fmt.Errorf("%s: %w", op, err)
+		}
 
+		log.Error("failed to save user", sl.Err(err))
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
@@ -125,5 +130,27 @@ func (a *Auth) RegisterNewUser(ctx context.Context, email, password string) (int
 }
 
 func (a *Auth) IsAdmin(ctx context.Context, userID int64) (bool, error) {
-	panic("not implemented")
+	const op = "auth.IsAdmin"
+
+	log := a.log.With(
+		slog.String("op", op),
+	)
+
+	log.Info("is admin info")
+
+	isAdmin, err := a.usrProvider.isAdmin(ctx, userID)
+	if err != nil {
+		if errors.Is(err, storage.ErrUserExists) {
+			log.Warn("can't find is user admin", sl.Err(err))
+			
+			return false, fmt.Errorf("%s: %w", op, err)
+		}
+
+		log.Error("can't find is user admin", sl.Err(err))
+		return false, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("checked if user is admin", slog.Bool("is_admin", isAdmin))
+
+	return isAdmin, nil
 }
